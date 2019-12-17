@@ -20,7 +20,7 @@ class RestaurantViewSet(viewsets.ModelViewSet):
     serializer_class = RestaurantSerializer
 
 def home(request):
-    response = requests.get('https://api.yelp.com/v3/businesses/search?latitude=37.786882&longitude=-122.399972', headers={'Authorization': 'Bearer 9thV13jtkqHq-k5tjfKPNvPk9jx8uU7I83PGIaWED9Ctv_YJOojIQ-VOsVB3POXnsX0nzNVjIAl41ynvS5pknNABaYlbTDfjwh4QHGn4m7PqXUA0mqcO9By2Jw34XXYx'})
+    response = requests.get('https://api.yelp.com/v3/businesses/search?latitude=37.786882&longitude=-122.399972&limit=25', headers={'Authorization': 'Bearer 9thV13jtkqHq-k5tjfKPNvPk9jx8uU7I83PGIaWED9Ctv_YJOojIQ-VOsVB3POXnsX0nzNVjIAl41ynvS5pknNABaYlbTDfjwh4QHGn4m7PqXUA0mqcO9By2Jw34XXYx'})
     business_data = response.json()
     data_dict = {}
     data_dict['yelp_id'] = business_data['businesses'][0]['id']
@@ -32,9 +32,10 @@ def home(request):
     data_dict['latitude'] = business_data['businesses'][0]['coordinates']['latitude']
     data_dict['longitude'] = business_data['businesses'][0]['coordinates']['longitude']
     data_dict['image_url'] = business_data['businesses'][0]['image_url']
-    data_dict['address'] = business_data['businesses'][0]['location']['display_address']
+    a = ", "
+    data_dict['address'] = a.join(business_data['businesses'][0]['location']['display_address'])
     data_dict['distance'] = business_data['businesses'][0]['distance']
-    data_dict['transactions'] = business_data['businesses'][0]['transactions']
+    # data_dict['transactions'] = business_data['businesses'][0]['transactions']
     restaurant = Restaurant(**data_dict)
     restaurant.save()
     # restaurant = Restaurant.objects.create(data_dict)
