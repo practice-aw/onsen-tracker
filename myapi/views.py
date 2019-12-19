@@ -40,7 +40,7 @@ class RestaurantViewSet(viewsets.ModelViewSet):
         YELP_API_KEY = config('YELP_API_KEY')
         print("keyyyyyyyyyyy", YELP_API_KEY)
 
-        response = requests.get(f'https://api.yelp.com/v3/businesses/search?latitude={lat}&longitude={lng}', headers={'Authorization': YELP_API_KEY})
+        response = requests.get(f'https://api.yelp.com/v3/businesses/search?latitude={lat}&longitude={lng}&limit=5', headers={'Authorization': YELP_API_KEY})
         business_data = response.json()
         all_data_dicts = []
         data_dict = {}
