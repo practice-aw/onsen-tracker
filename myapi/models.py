@@ -14,6 +14,7 @@ class Restaurant(models.Model):
     phone = models.CharField(max_length=400, null=True)
     is_closed = models.BooleanField(null=True)
     review_count = models.IntegerField(default=0)
+    yelp_rating = models.FloatField(default=0)
     url = models.CharField(max_length=400, null=True)
     latitude = models.FloatField(max_length=100, null=True)
     longitude = models.FloatField(max_length=100, null=True)

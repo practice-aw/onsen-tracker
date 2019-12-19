@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import JsonResponse
 import requests
 
 from rest_framework import viewsets
+from rest_framework.response import Response
 
 from .serializers import HeroSerializer
 from .serializers import RestaurantSerializer
@@ -15,29 +17,80 @@ class HeroViewSet(viewsets.ModelViewSet):
     queryset = Hero.objects.all().order_by('name')
     serializer_class = HeroSerializer
 
-class RestaurantViewSet(viewsets.ModelViewSet):
-    queryset = Restaurant.objects.all()
-    serializer_class = RestaurantSerializer
+class RestaurantViewSet(viewsets.ViewSet):
+    # queryset = Restaurant.objects.all()
+    # serializer_class = RestaurantSerializer
 
-def home(request):
-    response = requests.get('https://api.yelp.com/v3/businesses/search?latitude=37.786882&longitude=-122.399972&limit=25', headers={'Authorization': 'Bearer 9thV13jtkqHq-k5tjfKPNvPk9jx8uU7I83PGIaWED9Ctv_YJOojIQ-VOsVB3POXnsX0nzNVjIAl41ynvS5pknNABaYlbTDfjwh4QHGn4m7PqXUA0mqcO9By2Jw34XXYx'})
-    business_data = response.json()
-    data_dict = {}
-    data_dict['yelp_id'] = business_data['businesses'][0]['id']
-    data_dict['name'] = business_data['businesses'][0]['name']
-    data_dict['phone'] = business_data['businesses'][0]['phone']
-    data_dict['is_closed'] = business_data['businesses'][0]['is_closed']
-    data_dict['review_count'] = business_data['businesses'][0]['review_count']
-    data_dict['url'] = business_data['businesses'][0]['url']
-    data_dict['latitude'] = business_data['businesses'][0]['coordinates']['latitude']
-    data_dict['longitude'] = business_data['businesses'][0]['coordinates']['longitude']
-    data_dict['image_url'] = business_data['businesses'][0]['image_url']
-    a = ", "
-    data_dict['address'] = a.join(business_data['businesses'][0]['location']['display_address'])
-    data_dict['distance'] = business_data['businesses'][0]['distance']
-    # data_dict['transactions'] = business_data['businesses'][0]['transactions']
-    restaurant = Restaurant(**data_dict)
-    restaurant.save()
-    # restaurant = Restaurant.objects.create(data_dict)
-    print("test response", restaurant.yelp_id)
-    return HttpResponse(business_data['businesses'][0]['id'])
+    # def get_queryset(self):
+    #    restaurants = Restaurant.objects.all()
+    #    return restaurants
+
+    # Should this be a post request that redirects to get?
+    def list(self, request):
+        queryset = Restaurant.objects.all()
+        serializer = RestaurantSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request):
+
+        response = requests.get('https://api.yelp.com/v3/businesses/search?latitude=37.786882&longitude=-122.399972&limit=25', headers={'Authorization': 'Bearer 9thV13jtkqHq-k5tjfKPNvPk9jx8uU7I83PGIaWED9Ctv_YJOojIQ-VOsVB3POXnsX0nzNVjIAl41ynvS5pknNABaYlbTDfjwh4QHGn4m7PqXUA0mqcO9By2Jw34XXYx'})
+        business_data = response.json()
+        all_data_dicts = []
+        data_dict = {}
+
+
+        for data in business_data['businesses']:
+            data_dict = {}
+            data_dict['yelp_id'] = data['id']
+            data_dict['name'] = data['name']
+            data_dict['phone'] = data['phone']
+            data_dict['is_closed'] = data['is_closed']
+            data_dict['review_count'] = data['review_count']
+            data_dict['yelp_rating'] = data['rating']
+            data_dict['url'] = data['url']
+            data_dict['latitude'] = data['coordinates']['latitude']
+            data_dict['longitude'] = data['coordinates']['longitude']
+            data_dict['image_url'] = data['image_url']
+            a = ", "
+            data_dict['address'] = a.join(data['location']['display_address'])
+            data_dict['distance'] = data['distance']
+            all_data_dicts.append(data_dict)
+            # return all_data_dicts
+        for data in all_data_dicts:
+            Restaurant.objects.create(**data)
+        # print("test response", restaurant.yelp_id)
+        # restaurants = self.get_queryset()
+        # serializer = self.serializer_class()
+        return HttpResponse('Restaurants Retrieved')
+
+
+    # def get(request):
+    #     response = requests.get('https://api.yelp.com/v3/businesses/search?latitude=37.786882&longitude=-122.399972&limit=25', headers={'Authorization': 'Bearer 9thV13jtkqHq-k5tjfKPNvPk9jx8uU7I83PGIaWED9Ctv_YJOojIQ-VOsVB3POXnsX0nzNVjIAl41ynvS5pknNABaYlbTDfjwh4QHGn4m7PqXUA0mqcO9By2Jw34XXYx'})
+    #     business_data = response.json()
+    #     all_data_dicts = []
+    #     data_dict = {}
+    #
+    #
+    #     for data in business_data['businesses']:
+    #         data_dict = {}
+    #         data_dict['yelp_id'] = data['id']
+    #         data_dict['name'] = data['name']
+    #         data_dict['phone'] = data['phone']
+    #         data_dict['is_closed'] = data['is_closed']
+    #         data_dict['review_count'] = data['review_count']
+    #         data_dict['yelp_rating'] = data['rating']
+    #         data_dict['url'] = data['url']
+    #         data_dict['latitude'] = data['coordinates']['latitude']
+    #         data_dict['longitude'] = data['coordinates']['longitude']
+    #         data_dict['image_url'] = data['image_url']
+    #         a = ", "
+    #         data_dict['address'] = a.join(data['location']['display_address'])
+    #         data_dict['distance'] = data['distance']
+    #         all_data_dicts.append(data_dict)
+    #         # return all_data_dicts
+    #     for data in all_data_dicts:
+    #         Restaurant.objects.create(**data)
+    #     # print("test response", restaurant.yelp_id)
+    #     # restaurants = self.get_queryset()
+    #     # serializer = self.serializer_class()
+    #     return HttpResponse(business_data['businesses'][0]['id'])
