@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 import requests
 
-from django.conf import settings
+from decouple import config
 
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -14,8 +14,6 @@ from .serializers import RestaurantSerializer
 from .models import Hero
 from .models import Restaurant
 # Create your views here.
-
-YELP_API_KEY = settings.YELP_API_KEY
 
 class HeroViewSet(viewsets.ModelViewSet):
     queryset = Hero.objects.all().order_by('name')
@@ -39,9 +37,10 @@ class RestaurantViewSet(viewsets.ModelViewSet):
         params = request.GET
         lat = params['lat']
         lng = params['lng']
-        print("params:", lat, lng)
+        YELP_API_KEY = config('YELP_API_KEY')
+        print("keyyyyyyyyyyy", YELP_API_KEY)
 
-        response = requests.get(f'https://api.yelp.com/v3/businesses/search?latitude={lat}&longitude={lng}', headers={'Authorization': settings.YELP_API_KEY})
+        response = requests.get(f'https://api.yelp.com/v3/businesses/search?latitude={lat}&longitude={lng}', headers={'Authorization': YELP_API_KEY})
         business_data = response.json()
         all_data_dicts = []
         data_dict = {}
