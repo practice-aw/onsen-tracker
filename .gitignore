@@ -1,5 +1,8 @@
 # Byte-compiled / optimized / DLL files
+
 .DS_Store
+local_settings.py
+.env
 __pycache__/
 *.py[cod]
 # C extensions
