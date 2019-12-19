@@ -82,16 +82,16 @@ WSGI_APPLICATION = 'tacoboutit.wsgi.application'
 # DATABASES = {
 #     'default': dj_database_url.config()
 # }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tacoboutit',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': ''
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'tacoboutit',
+#         'USER': '',
+#         'PASSWORD': '',
+#         'HOST': '',
+#         'PORT': ''
+#     }
+# }
 
 
 # Password validation
