@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 import requests
 
+from django.conf import settings
+
 from rest_framework import viewsets
 from rest_framework.response import Response
 
@@ -12,6 +14,8 @@ from .serializers import RestaurantSerializer
 from .models import Hero
 from .models import Restaurant
 # Create your views here.
+
+YELP_API_KEY = settings.YELP_API_KEY
 
 class HeroViewSet(viewsets.ModelViewSet):
     queryset = Hero.objects.all().order_by('name')
@@ -32,8 +36,12 @@ class RestaurantViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def retrieve(request):
+        params = request.GET
+        lat = params['lat']
+        lng = params['lng']
+        print("params:", lat, lng)
 
-        response = requests.get('https://api.yelp.com/v3/businesses/search?latitude=37.786882&longitude=-122.399972&limit=25', headers={'Authorization': 'Bearer 9thV13jtkqHq-k5tjfKPNvPk9jx8uU7I83PGIaWED9Ctv_YJOojIQ-VOsVB3POXnsX0nzNVjIAl41ynvS5pknNABaYlbTDfjwh4QHGn4m7PqXUA0mqcO9By2Jw34XXYx'})
+        response = requests.get(f'https://api.yelp.com/v3/businesses/search?latitude={lat}&longitude={lng}', headers={'Authorization': settings.YELP_API_KEY})
         business_data = response.json()
         all_data_dicts = []
         data_dict = {}
@@ -60,12 +68,7 @@ class RestaurantViewSet(viewsets.ModelViewSet):
             Restaurant.objects.create(**data)
         queryset = Restaurant.objects.all()
         serializer = RestaurantSerializer(queryset, many=True)
-        print(serializer.data[0])
-        # return Response(serializer.data)
 
-        # print("test response", restaurant.yelp_id)
-        # restaurants = self.get_queryset()
-        # serializer = self.serializer_class()
         return JsonResponse(serializer.data, safe=False)
 
 
