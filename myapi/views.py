@@ -61,7 +61,7 @@ class RestaurantViewSet(viewsets.ModelViewSet):
                     'latitude': data['latitude'], 'longitude': data['longitude'], 'image_url': data['image_url'],
                     'address': data['address'], 'distance': data['distance']},
                 )
-            queryset = Restaurant.objects.all()
+            queryset = Restaurant.objects.filter(yelp_id__in=yelp_ids)
             serializer = RestaurantSerializer(queryset, many=True)
 
             return JsonResponse(serializer.data, safe=False)
