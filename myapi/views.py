@@ -10,9 +10,9 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from .serializers import HeroSerializer
-from .serializers import RestaurantSerializer
+from .serializers import RestaurantSerializer, TacoSerializer
 
-from .models import Hero
+from .models import Hero, Taco
 from .models import Restaurant
 # Create your views here.
 
@@ -20,11 +20,21 @@ class HeroViewSet(viewsets.ModelViewSet):
     queryset = Hero.objects.all().order_by('name')
     serializer_class = HeroSerializer
 
+class TacoViewSet(viewsets.ModelViewSet):
+    queryset = Taco.objects.all()
+    serializer_class = TacoSerializer
+
 class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
 
+
+class RestaurantUpdateOrCreateViewSet(viewsets.ModelViewSet):
+    queryset = Restaurant.objects.all()
+    serializer_class = RestaurantSerializer
+
     def retrieve(request):
+        print("you hit the retrieve route")
         params = request.GET
         lat = params['lat']
         lng = params['lng']
