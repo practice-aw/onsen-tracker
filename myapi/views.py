@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
 import requests
+import json
 
 from decouple import config
 
@@ -23,6 +24,37 @@ class HeroViewSet(viewsets.ModelViewSet):
 class TacoViewSet(viewsets.ModelViewSet):
     queryset = Taco.objects.all()
     serializer_class = TacoSerializer
+
+    def post_new(request):
+        data = request.POST
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        id = body['restaurant']
+
+        print(" you hgot this route", body)
+        restaurant = Restaurant.objects.filter(id=id)
+        if(restaurant):
+            taco = Taco.objects.get_or_create(
+                restaurant_id = id,
+                type = body['type']
+            )
+            if(taco[1]):
+                content = {
+                     'success': f'{taco[0]} added'
+                  }
+                return JsonResponse(content, status=status.HTTP_201_CREATED)
+            else:
+                content = {
+                     'error': f'{taco[0]} already exists'
+                  }
+                return JsonResponse(content, status=status.HTTP_226_IM_USED)
+        else:
+             content = {
+                  'error': f'A restaurant with id: {id} does not exist'
+               }
+             return JsonResponse(content, status=status.HTTP_404_NOT_FOUND)
+        # return response
+
 
 class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
