@@ -1,6 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 from . import views
+# from django.views.decorators.csrf import csrf_exempt
 # figure out out to remove trailing slash requirement
 router = routers.DefaultRouter()
 router.register(r'tacos', views.TacoViewSet)
