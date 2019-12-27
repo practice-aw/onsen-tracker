@@ -4,10 +4,12 @@ from django.http import JsonResponse
 import requests
 import json
 
+from django.views.decorators.csrf import csrf_exempt
+
 from decouple import config
 
-from rest_framework import viewsets
-from rest_framework import status
+from rest_framework import viewsets, mixins, generics, status
+# from rest_framework import status
 from rest_framework.response import Response
 
 from .serializers import HeroSerializer
@@ -21,26 +23,29 @@ class HeroViewSet(viewsets.ModelViewSet):
     queryset = Hero.objects.all().order_by('name')
     serializer_class = HeroSerializer
 
-class TacoViewSet(viewsets.ModelViewSet):
+class TacoViewSet( mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin,
+                   mixins.ListModelMixin,
+                   viewsets.GenericViewSet):
     queryset = Taco.objects.all()
     serializer_class = TacoSerializer
 
+    @csrf_exempt
     def post_new(request):
         data = request.POST
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         id = body['restaurant']
-
-        print(" you hgot this route", body)
         restaurant = Restaurant.objects.filter(id=id)
-        if(restaurant):
+        if(restaurant and 'type' in body):
             taco = Taco.objects.get_or_create(
                 restaurant_id = id,
                 type = body['type']
             )
             if(taco[1]):
                 content = {
-                     'success': f'{taco[0]} added'
+                     'success': f'{taco[0]} added to {restaurant[0]}'
                   }
                 return JsonResponse(content, status=status.HTTP_201_CREATED)
             else:
@@ -53,7 +58,6 @@ class TacoViewSet(viewsets.ModelViewSet):
                   'error': f'A restaurant with id: {id} does not exist'
                }
              return JsonResponse(content, status=status.HTTP_404_NOT_FOUND)
-        # return response
 
 
 class RestaurantViewSet(viewsets.ModelViewSet):
