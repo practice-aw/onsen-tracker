@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 from . import views
-
+# figure out out to remove trailing slash requirement
 router = routers.DefaultRouter()
 router.register(r'tacos', views.TacoViewSet)
 router.register(r'restaurants', views.RestaurantViewSet)
@@ -14,6 +14,7 @@ router.register(r'restaurants', views.RestaurantViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('api/v1/restaurants/retrieve/', views.RestaurantUpdateOrCreateViewSet.retrieve, name='update_or_create'),
+    path('api/v1/tacos/new/', views.TacoViewSet.post_new, name='new_taco'),
     path(r'api/v1/', include(router.urls)),
     # The line below allows us to retrieve restaurants from the db but not post
     # path('api/', include(router.urls)),
