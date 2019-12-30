@@ -28,7 +28,7 @@ SECRET_KEY = 'c16zv^%j$=(!pon58tpj!$k%0)=7_69-r1$=c*18-27qk=3zdh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['staging-tacoboutit-be.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['staging-tacoboutit-be.herokuapp.com', 'localhost', 'tacoboutit-test.herokuapp.com']
 
 
 # Application definition
