@@ -1,12 +1,6 @@
 from rest_framework import serializers
 
-from .models import Hero
 from .models import Restaurant, Taco, Review
-
-class HeroSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Hero
-        fields = ('name', 'alias')
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:

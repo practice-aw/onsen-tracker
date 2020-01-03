@@ -3,12 +3,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import Avg
 
 # Create your models here.
-class Hero(models.Model):
-    name = models.CharField(max_length=400)
-    alias = models.CharField(max_length=60)
-
-    def __str__(self):
-        return self.name
 
 class Restaurant(models.Model):
     name = models.CharField(max_length=400)
@@ -29,9 +23,10 @@ class Restaurant(models.Model):
     def __str__(self):
         return self.name
 
+    #  Properties allow us to call self.tacos()
     # @property
     # def tacos(self):
-    #     return self.taco_set.all()
+    #     return self.tacos.all()
 
 class Taco(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name="tacos")
@@ -43,7 +38,7 @@ class Taco(models.Model):
     # @property
     # def reviews(self):
     #     print("testing testing")
-    #     return self.review_set.all()
+    #     return self.reviews.all()
 
     @property
     def average_rating(self):
