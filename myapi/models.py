@@ -42,8 +42,6 @@ class Taco(models.Model):
 
     @property
     def average_rating(self):
-        print("testing testing", self.reviews.aggregate(Avg('rating'))['rating__avg'])
-        # return self.reviews
         return self.reviews.aggregate(Avg('rating'))['rating__avg']
 
 class Review(models.Model):
