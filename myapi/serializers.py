@@ -1,18 +1,27 @@
 from rest_framework import serializers
 
 from .models import Hero
-from .models import Restaurant, Taco
+from .models import Restaurant, Taco, Review
 
 class HeroSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Hero
         fields = ('name', 'alias')
 
-class TacoSerializer(serializers.ModelSerializer):
+class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Taco
+        model = Review
         # this might need to be changed
         fields = "__all__"
+
+class TacoSerializer(serializers.ModelSerializer):
+    reviews = ReviewSerializer(many=True, read_only=True)
+    average_rating = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Taco
+        # the field reviews must be named exactly the same as the related name
+        fields = ('id', 'type', 'restaurant_id', 'average_rating', 'reviews')
 
 class RestaurantSerializer(serializers.HyperlinkedModelSerializer):
     tacos = TacoSerializer(many=True, read_only=True)

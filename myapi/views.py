@@ -13,9 +13,9 @@ from rest_framework import viewsets, mixins, generics, status
 from rest_framework.response import Response
 
 from .serializers import HeroSerializer
-from .serializers import RestaurantSerializer, TacoSerializer
+from .serializers import RestaurantSerializer, TacoSerializer, ReviewSerializer
 
-from .models import Hero, Taco
+from .models import Hero, Taco, Review
 from .models import Restaurant
 # Create your views here.
 
@@ -59,6 +59,10 @@ class TacoViewSet( mixins.RetrieveModelMixin,
                }
              return JsonResponse(content, status=status.HTTP_404_NOT_FOUND)
 
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
 
 class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()

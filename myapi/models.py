@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db.models import Avg
 
 # Create your models here.
 class Hero(models.Model):
@@ -27,9 +29,9 @@ class Restaurant(models.Model):
     def __str__(self):
         return self.name
 
-    @property
-    def tacos(self):
-        return self.taco_set.all()
+    # @property
+    # def tacos(self):
+    #     return self.taco_set.all()
 
 class Taco(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name="tacos")
@@ -37,3 +39,21 @@ class Taco(models.Model):
 
     def __str__(self):
         return self.type
+
+    # @property
+    # def reviews(self):
+    #     print("testing testing")
+    #     return self.review_set.all()
+
+    @property
+    def average_rating(self):
+        print("testing testing", self.reviews.aggregate(Avg('rating'))['rating__avg'])
+        # return self.reviews
+        return self.reviews.aggregate(Avg('rating'))['rating__avg']
+
+class Review(models.Model):
+    taco = models.ForeignKey(Taco, on_delete=models.CASCADE, related_name="reviews")
+    rating = models.FloatField(default=10, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    review = models.TextField(max_length=900, null=True, blank=True)
+    def __str__(self):
+        return self.rating
