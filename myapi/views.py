@@ -1,27 +1,18 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import JsonResponse
-import requests
-import json
+from django.http import HttpResponse, JsonResponse
+import requests, json
 
 from django.views.decorators.csrf import csrf_exempt
-
+from .utils import data_org
 from decouple import config
 
 from rest_framework import viewsets, mixins, generics, status
-# from rest_framework import status
 from rest_framework.response import Response
 
-from .serializers import HeroSerializer
 from .serializers import RestaurantSerializer, TacoSerializer, ReviewSerializer
 
-from .models import Hero, Taco, Review
-from .models import Restaurant
+from .models import Taco, Review, Restaurant
 # Create your views here.
-
-class HeroViewSet(viewsets.ModelViewSet):
-    queryset = Hero.objects.all().order_by('name')
-    serializer_class = HeroSerializer
 
 class TacoViewSet( mixins.RetrieveModelMixin,
                    mixins.UpdateModelMixin,
@@ -74,7 +65,6 @@ class RestaurantUpdateOrCreateViewSet(viewsets.ModelViewSet):
     serializer_class = RestaurantSerializer
 
     def retrieve(request):
-        print("you hit the retrieve route")
         params = request.GET
         lat = params['lat']
         lng = params['lng']
@@ -84,26 +74,11 @@ class RestaurantUpdateOrCreateViewSet(viewsets.ModelViewSet):
         business_data = response.json()
         all_data_dicts = []
         yelp_ids = []
-        data_dict = {}
         if(business_data['total'] != 0):
-            for data in business_data['businesses']:
-                data_dict = {}
-                data_dict['yelp_id'] = data['id']
-                data_dict['name'] = data['name']
-                data_dict['phone'] = data['phone']
-                data_dict['is_closed'] = data['is_closed']
-                data_dict['review_count'] = data['review_count']
-                data_dict['yelp_rating'] = data['rating']
-                data_dict['url'] = data['url']
-                data_dict['latitude'] = data['coordinates']['latitude']
-                data_dict['longitude'] = data['coordinates']['longitude']
-                data_dict['image_url'] = data['image_url']
-                a = ", "
-                data_dict['address'] = a.join(data['location']['display_address'])
-                data_dict['distance'] = data['distance']
-                all_data_dicts.append(data_dict)
-                yelp_ids.append(data['id'])
+            data_org(business_data, all_data_dicts, yelp_ids)
+
             for data in all_data_dicts:
+                print("this is where you are tru", data['yelp_id'])
                 Restaurant.objects.update_or_create(
                     yelp_id = data['yelp_id'],
                     defaults={'name': data['name'], 'phone': data['phone'], 'is_closed': data['is_closed'],
