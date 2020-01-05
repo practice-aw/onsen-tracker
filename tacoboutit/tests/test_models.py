@@ -8,6 +8,8 @@ class TestModels:
         rest = mixer.blend('myapi.Restaurant', name='scotts tacos')
         assert rest.tacos
 
+        self._fixture_teardown()
+
     # def test_str_method(self):
     #     rest = mixer.blend('myapi.Restaurant', name='scotts tacos')
     #     assert rest.__str_()
