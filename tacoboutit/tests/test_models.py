@@ -7,7 +7,7 @@ class TestModels:
         #create the taco
         rest = mixer.blend('myapi.Restaurant', name='scotts tacos')
         assert rest.tacos
-
+    def _post_teardown(self):
         self._fixture_teardown()
 
     # def test_str_method(self):
