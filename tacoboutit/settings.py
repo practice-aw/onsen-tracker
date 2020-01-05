@@ -85,9 +85,7 @@ WSGI_APPLICATION = 'tacoboutit.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': dj_database_url.config()
-# }
+
 if 'TRAVIS' in os.environ:
     DATABASES = {
         'default': {
@@ -103,16 +101,6 @@ else:
     DATABASES = {}
     DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'tacoboutit',
-#         'USER': '',
-#         'PASSWORD': '',
-#         'HOST': '',
-#         'PORT': ''
-#     }
-# }
 
 
 # Password validation
