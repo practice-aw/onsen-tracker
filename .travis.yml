@@ -17,7 +17,7 @@ install:
   - pip install psycopg2 --quiet
 
 before_script:
-  # - psql -c "CREATE DATABASE tacoboutit;" -U postgres
+  - psql -c "CREATE DATABASE tacoboutit;" -U postgres
 
 script:
-  # - python3 manage.py test tacoboutit
+  - python3 manage.py test tacoboutit
