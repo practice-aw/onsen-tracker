@@ -6,6 +6,7 @@ from . import views
 router = routers.DefaultRouter()
 router.register(r'tacos', views.TacoViewSet)
 router.register(r'restaurants', views.RestaurantViewSet)
+router.register(r'reviews', views.ReviewViewSet)
 # router.register(r'api/v1/restaurants', views.RestaurantUpdateOrCreateViewSet)
 
 # router.register(r'heroes', views.HeroViewSet)
