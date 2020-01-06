@@ -26,3 +26,14 @@ class Restaurant(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def tacos(self):
+        return self.taco_set.all()
+
+class Taco(models.Model):
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name="tacos")
+    type = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.type
