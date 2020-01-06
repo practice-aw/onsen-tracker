@@ -16,4 +16,3 @@ def data_org(yelp_info, all_data_dicts, yelp_ids):
         data_dict['distance'] = data['distance']
         all_data_dicts.append(data_dict)
         yelp_ids.append(data['id'])
-    # return data_dict
