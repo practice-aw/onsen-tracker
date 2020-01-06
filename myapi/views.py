@@ -78,7 +78,6 @@ class RestaurantUpdateOrCreateViewSet(viewsets.ModelViewSet):
             data_org(business_data, all_data_dicts, yelp_ids)
 
             for data in all_data_dicts:
-                print("this is where you are tru", data['yelp_id'])
                 Restaurant.objects.update_or_create(
                     yelp_id = data['yelp_id'],
                     defaults={'name': data['name'], 'phone': data['phone'], 'is_closed': data['is_closed'],
