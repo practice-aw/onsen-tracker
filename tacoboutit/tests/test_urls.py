@@ -5,10 +5,13 @@ from rest_framework import status
 from decouple import config
 from django.utils.html import escape
 
+#rest and taco show pages /:id
+#tacos/new/
+#tacos -- test to see if review data comes in response
 
 
 class ApiTestCase(APITestCase):
-    def test_call(self):
+    def test_restaurants_retrieve(self):
         response = self.client.get('/api/v1/restaurants/retrieve/', {'lat': 30, 'lng': -104})
         data ={
             "id": 1,
@@ -30,3 +33,9 @@ class ApiTestCase(APITestCase):
         content = json.loads(response.content)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(content[0],data)
+
+    def test
+
+# class RestaurantModel:
+#class ReviewModel:
+#class taco model
