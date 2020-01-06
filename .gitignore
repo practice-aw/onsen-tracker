@@ -1,10 +1,14 @@
 # Byte-compiled / optimized / DLL files
+
+.DS_Store
+local_settings.py
+.env
 __pycache__/
 *.py[cod]
 # C extensions
 *.so
 # Distribution / packaging
-.python
+.Python
 bin/
 virtualenv/
 build/

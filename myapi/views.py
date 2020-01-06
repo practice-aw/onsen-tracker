@@ -1,8 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import JsonResponse
 import requests
 
+from decouple import config
+
 from rest_framework import viewsets
+from rest_framework import status
+from rest_framework.response import Response
 
 from .serializers import HeroSerializer
 from .serializers import RestaurantSerializer
@@ -19,11 +24,49 @@ class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
 
-def home(request):
-    response = requests.get('https://api.yelp.com/v3/businesses/search?latitude=37.786882&longitude=-122.399972', headers={'Authorization': 'Bearer 9thV13jtkqHq-k5tjfKPNvPk9jx8uU7I83PGIaWED9Ctv_YJOojIQ-VOsVB3POXnsX0nzNVjIAl41ynvS5pknNABaYlbTDfjwh4QHGn4m7PqXUA0mqcO9By2Jw34XXYx'})
-    business_data = response.json()
-    name = business_data['businesses'][0]['alias']
-    yelp_id = business_data['businesses'][0]['id']
-    restaurant = Restaurant.objects.create(name=name, yelp_id=yelp_id)
-    print("test response", restaurant.yelp_id)
-    return HttpResponse(business_data['businesses'][0]['id'])
+    def retrieve(request):
+        params = request.GET
+        lat = params['lat']
+        lng = params['lng']
+        YELP_API_KEY = config('YELP_API_KEY')
+
+        response = requests.get(f'https://api.yelp.com/v3/businesses/search?latitude={lat}&longitude={lng}&limit=5&categories=mexican,tacos', headers={'Authorization': YELP_API_KEY})
+        business_data = response.json()
+        all_data_dicts = []
+        yelp_ids = []
+        data_dict = {}
+        if(business_data['total'] != 0):
+            for data in business_data['businesses']:
+                data_dict = {}
+                data_dict['yelp_id'] = data['id']
+                data_dict['name'] = data['name']
+                data_dict['phone'] = data['phone']
+                data_dict['is_closed'] = data['is_closed']
+                data_dict['review_count'] = data['review_count']
+                data_dict['yelp_rating'] = data['rating']
+                data_dict['url'] = data['url']
+                data_dict['latitude'] = data['coordinates']['latitude']
+                data_dict['longitude'] = data['coordinates']['longitude']
+                data_dict['image_url'] = data['image_url']
+                a = ", "
+                data_dict['address'] = a.join(data['location']['display_address'])
+                data_dict['distance'] = data['distance']
+                all_data_dicts.append(data_dict)
+                yelp_ids.append(data['id'])
+            for data in all_data_dicts:
+                Restaurant.objects.update_or_create(
+                    yelp_id = data['yelp_id'],
+                    defaults={'name': data['name'], 'phone': data['phone'], 'is_closed': data['is_closed'],
+                    'review_count': data['review_count'], 'yelp_rating': data['yelp_rating'], 'url': data['url'],
+                    'latitude': data['latitude'], 'longitude': data['longitude'], 'image_url': data['image_url'],
+                    'address': data['address'], 'distance': data['distance']},
+                )
+            queryset = Restaurant.objects.all()
+            serializer = RestaurantSerializer(queryset, many=True)
+
+            return JsonResponse(serializer.data, safe=False)
+        else:
+              content = {
+                'status': 'Resource Not Found'
+            }
+        return JsonResponse(content, status=status.HTTP_404_NOT_FOUND)
