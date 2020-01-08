@@ -24,7 +24,6 @@ class TacoViewSet( mixins.RetrieveModelMixin,
 
     @csrf_exempt
     def post_new(request):
-        data = request.POST
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         id = body['restaurant']
