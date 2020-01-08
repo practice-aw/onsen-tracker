@@ -34,10 +34,9 @@ class TacoViewSet( mixins.RetrieveModelMixin,
                 type = body['type']
             )
             if(taco[1]):
-                content = {
-                     'success': f'{taco[0]} added to {restaurant[0]}'
-                  }
-                return JsonResponse(content, status=status.HTTP_201_CREATED)
+                serializer = TacoSerializer(taco[0])
+
+                return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 content = {
                      'error': f'{taco[0]} already exists'
