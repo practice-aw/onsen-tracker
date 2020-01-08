@@ -50,3 +50,10 @@ class Review(models.Model):
     review = models.TextField(max_length=900, null=True, blank=True)
     def __str__(self):
         return self.rating
+
+class User(models.Model):
+    username = models.CharField(max_length=50)
+    email = models.CharField(max_length=80, unique=True)
+
+    def __str__(self):
+        return self.username

@@ -1,10 +1,15 @@
 from rest_framework import serializers
 
-from .models import Restaurant, Taco, Review
+from .models import Restaurant, Taco, Review, User
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
+        fields = "__all__"
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
         fields = "__all__"
 
 class TacoSerializer(serializers.ModelSerializer):

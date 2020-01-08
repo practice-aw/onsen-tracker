@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from decouple import config
 from django.utils.html import escape
-from myapi.models import Restaurant, Taco, Review
+from myapi.models import Restaurant, Taco, Review, User
 
 
 class RestaurantTestCase(APITestCase):
@@ -236,6 +236,53 @@ class TacoTestCase(APITestCase):
         content = json.loads(response.content)
 
         self.assertEqual(content['detail'], 'Not found.')
+
+class UserTestCase(APITestCase):
+    def setUp(self):
+        User.objects.create(username='taco', email='email@email.com')
+
+    def test_get_all_users(self):
+        response = self.client.get('/api/v1/users/')
+
+        self.assertEqual(User.objects.count(), 1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['username'], 'taco')
+        self.assertEqual(response.data[0]['email'], 'email@email.com')
+
+    def test_get_one_user(self):
+        user_id = User.objects.get(username='taco').id
+        response = self.client.get(f'/api/v1/users/{user_id}/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'], 'taco')
+        self.assertEqual(response.data['email'], 'email@email.com')
+
+    def test_get_one_user_bad_id(self):
+        response = self.client.get('/api/v1/users/433334/')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        content = json.loads(response.content)
+
+        self.assertEqual(content['detail'], 'Not found.')
+
+    def test_post_one_user(self):
+        response = self.client.post('/api/v1/users/', {'username':'taco', 'email':'email@email1.com'} )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        content = json.loads(response.content)
+
+        self.assertEqual(response.data['username'], 'taco')
+        self.assertEqual(response.data['email'], 'email@email1.com')
+
+    def test_post_one_user(self):
+        response = self.client.post('/api/v1/users/', {'username':'taco', 'email':'email@email.com'} )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        content = json.loads(response.content)
+
+
+        self.assertEqual(response.data['email'][0], 'user with this email already exists.')
+
 
     # def test_post_taco(self):
     #     taco_id = Taco.objects.get(type='al pastor test taco').id

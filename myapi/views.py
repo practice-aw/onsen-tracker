@@ -9,9 +9,9 @@ from decouple import config
 from rest_framework import viewsets, mixins, generics, status
 from rest_framework.response import Response
 
-from .serializers import RestaurantSerializer, TacoSerializer, ReviewSerializer
+from .serializers import RestaurantSerializer, TacoSerializer, ReviewSerializer, UserSerializer
 
-from .models import Taco, Review, Restaurant
+from .models import Taco, Review, Restaurant, User
 # Create your views here.
 
 class TacoViewSet( mixins.RetrieveModelMixin,
@@ -54,6 +54,13 @@ class TacoViewSet( mixins.RetrieveModelMixin,
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+
+class UserViewSet( mixins.RetrieveModelMixin,
+                   mixins.CreateModelMixin,
+                   mixins.ListModelMixin,
+                   viewsets.GenericViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 class RestaurantViewSet(mixins.RetrieveModelMixin,
                    mixins.ListModelMixin,
