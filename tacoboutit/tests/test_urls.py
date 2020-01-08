@@ -82,7 +82,6 @@ class RestaurantTestCase(APITestCase):
             "longitude": -104.019323420231,
             "image_url": "https://s3-media1.fl.yelpcdn.com/bphoto/-6-hdZM4A9i3SNArPp_bnw/o.jpg",
             "address": "S Highland Ave, Marfa, TX 79843",
-            "distance": 34130.494208487944,
             "tacoboutit_item_review_count": 0,
             "tacos": []
         }
@@ -116,8 +115,3 @@ class RestaurantTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(content['status'], 'Resource Not Found')
-
-
-# class RestaurantModel:
-#class ReviewModel:
-#class taco model
