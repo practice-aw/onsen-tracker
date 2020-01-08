@@ -237,6 +237,17 @@ class TacoTestCase(APITestCase):
 
         self.assertEqual(content['detail'], 'Not found.')
 
+    # def test_post_taco(self):
+    #     taco_id = Taco.objects.get(type='al pastor test taco').id
+    #     restaurant_id = Restaurant.objects.get(name='scotts tacos').id
+    #     response = self.client.post('/api/v1/tacos/new/',{'type':'cabeza', 'restaurant': restaurant_id})
+    #     content = json.loads(response.content)
+    #
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    #     self.assertEqual(content['rating'], 10)
+    #     self.assertEqual(content['review'], 'is ok')
+    #     self.assertEqual(content['taco'], taco_id)
+
 class UserTestCase(APITestCase):
     def setUp(self):
         User.objects.create(username='taco', email='email@email.com')
@@ -282,15 +293,3 @@ class UserTestCase(APITestCase):
 
 
         self.assertEqual(response.data['email'][0], 'user with this email already exists.')
-
-
-    # def test_post_taco(self):
-    #     taco_id = Taco.objects.get(type='al pastor test taco').id
-    #     restaurant_id = Restaurant.objects.get(name='scotts tacos').id
-    #     response = self.client.post('/api/v1/tacos/new/',{'type':'cabeza', 'restaurant': restaurant_id})
-    #     content = json.loads(response.content)
-    #
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    #     self.assertEqual(content['rating'], 10)
-    #     self.assertEqual(content['review'], 'is ok')
-    #     self.assertEqual(content['taco'], taco_id)
