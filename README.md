@@ -16,7 +16,7 @@ our database with a newly generated ID. This restaurant data enables users to cr
 ![tacoboutit](https://user-images.githubusercontent.com/33855435/72001432-b539aa00-3202-11ea-9685-707345feb14d.jpg)
 
 ## Getting Started
-Heroku: https://tacoboutit-test.herokuapp.com
+Heroku: https://tacoboutit-backend.herokuapp.com
 
 Postman[https://www.getpostman.com/downloads/] can be used to make HTTP requests.
 
