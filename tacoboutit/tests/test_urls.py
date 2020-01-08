@@ -59,6 +59,14 @@ class RestaurantTestCase(APITestCase):
         self.assertEqual(response.data['yelp_rating'], 4.7)
         self.assertEqual(response.data['tacos'][0]['id'], taco_id)
 
+    def test_get_one_restaurant_bad_id(self):
+        response = self.client.get(f'/api/v1/restaurants/123456/')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        content = json.loads(response.content)
+
+        self.assertEqual(content['detail'], 'Not found.')
+
     def test_restaurants_retrieve(self):
         response = self.client.get('/api/v1/restaurants/retrieve/', {'lat': 30, 'lng': -104})
         data ={
@@ -74,7 +82,6 @@ class RestaurantTestCase(APITestCase):
             "longitude": -104.019323420231,
             "image_url": "https://s3-media1.fl.yelpcdn.com/bphoto/-6-hdZM4A9i3SNArPp_bnw/o.jpg",
             "address": "S Highland Ave, Marfa, TX 79843",
-            "distance": 34130.494208487944,
             "tacoboutit_item_review_count": 0,
             "tacos": []
         }
@@ -91,7 +98,6 @@ class RestaurantTestCase(APITestCase):
         self.assertEqual(content[0]['longitude'], data['longitude'])
         self.assertEqual(content[0]['image_url'], data['image_url'])
         self.assertEqual(content[0]['address'], data['address'])
-        self.assertEqual(content[0]['distance'], data['distance'])
         self.assertEqual(content[0]['tacoboutit_item_review_count'], data['tacoboutit_item_review_count'])
         self.assertEqual(content[0]['tacos'], data['tacos'])
 
@@ -108,8 +114,3 @@ class RestaurantTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(content['status'], 'Resource Not Found')
-
-
-# class RestaurantModel:
-#class ReviewModel:
-#class taco model
