@@ -1,3 +1,4 @@
+
 # Tacoboutit Backend
 
 In this group project, we build a Restful Python DJANGO API that exposes endpoints for a React-Native
@@ -6,7 +7,7 @@ given coordinates from the user. That data is then filtered in backend alorithms
 our database with a newly generated ID. Using our internal API you can make a variety of HTTP requests related to 
 specific Taco dishes. 
 
-## Endpoints
+# Endpoints
 ### GET /api/v1/reviews
 Response:
 ```
@@ -200,13 +201,66 @@ Body:
 ]
 ```
 
+### POST /api/v1/reviews
+When I make the POST request with this information in the body:
+```
+{"rating": 10, "review": "is ok", "taco": 27}
+
+```
+Response:
+```
+body:
+{
+    "id": 8,
+    "rating": 10.0,
+    "review": "is ok",
+    "taco": 27
+}
+```
+
+### POST /api/v1/tacos/new/
+The post request should be formatted as follows:
+```
+Body:
+    { 
+      "type": "carne asada", 
+       "restaurant": 23535
+     }
+```
+Response:
+```
+Body:
+    {  
+     "success": "carne asada added to Taquería El Trompito"
+    }
+```
+When the restaurant does not exist:
+Response:
+```
+{ 
+      "error": "A restaurant with id: 2382 does not exist"
+}
+```
+When the taco already exists:
+Response:
+```
+    "error": "carne asada already exists"
+```
 
 
-##Schema Design
+## Schema Design
 
 <img width="1183" alt="Screen Shot 2020-01-07 at 11 02 11 PM" src="https://user-images.githubusercontent.com/33855435/71954283-0796ae80-31a2-11ea-974c-902dc9de5da6.png">
 
-##Getting Started
+## Getting Started
 Heroku: https://tacoboutit-test.herokuapp.com
 Postman[https://www.getpostman.com/downloads/] can be used to make HTTP requests. 
+
+### For Developers: How to Run Tests
+
+### Product Management
+
+### Versions
+
+### Core Contributors
 
