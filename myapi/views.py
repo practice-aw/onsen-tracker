@@ -55,7 +55,10 @@ class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet( mixins.RetrieveModelMixin,
+                   mixins.CreateModelMixin,
+                   mixins.ListModelMixin,
+                   viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
