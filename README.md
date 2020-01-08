@@ -3,13 +3,21 @@
 
 In this group project, we build a Restful Python DJANGO API that exposes endpoints for a React-Native
 front end application. The backend application consumes Yelp API business data based off of
-given coordinates from the user. That data is then filtered in backend alorithms and saved into 
-our database with a newly generated ID. Using our internal API you can make a variety of HTTP requests related to 
-specific Taco dishes. 
+given coordinates from the user. That data is then filtered using alorithms in the backend and saved into 
+our database with a newly generated ID. This restaurant data enables users to create post tacos for a specific restaurant, create reviews for specific tacos, as well as pulling and reviewing this data. 
+
+## Schema Design
+
+<img width="1183" alt="Screen Shot 2020-01-07 at 11 02 11 PM" src="https://user-images.githubusercontent.com/33855435/71954283-0796ae80-31a2-11ea-974c-902dc9de5da6.png">
+
+## Data Flow Example: 
+### Endpoint api/v1/restaurants/retrieve?lat=40&lng=-140 
+![tacoboutit](https://user-images.githubusercontent.com/33855435/72001432-b539aa00-3202-11ea-9685-707345feb14d.jpg)
 
 ## Getting Started
 Heroku: https://tacoboutit-test.herokuapp.com
-Postman[https://www.getpostman.com/downloads/] can be used to make HTTP requests. 
+Postman[https://www.getpostman.com/downloads/] can be used to make HTTP requests.
+Front-end Repository: https://github.com/TakoBoutIt/tacoboutit-frontend
 
 
 # Endpoints
@@ -68,138 +76,147 @@ body:
 ### GET /api/v1/tacos/1 (:id)
 Response: 
 ```
-Body:
 {
-    "id": 1,
-    "type": "al pastor",
-    "restaurant": 2361
+    "id": 37,
+    "type": "carne asada",
+    "restaurant_id": 46,
+    "average_rating": 10.0,
+    "reviews": [
+        {
+            "id": 52,
+            "rating": 10.0,
+            "review": "is ok",
+            "taco": 37
+        }
+    ]
 }
 ```
 ### GET /api/v1/restaurants/1 (:id)
 Response:
 ```
-Body:
 {
-    "id": 2361,
-    "yelp_id": "aRur9R9tTXqRgqb_NZQyBA",
-    "name": "Casco Antiguo",
-    "phone": "+12065380400",
+    "id": 46,
+    "yelp_id": "IhQvn84o-VuCMg6oDJ-tiQ",
+    "name": "Acapulco Bay",
+    "phone": "+19705426400",
     "is_closed": false,
-    "review_count": 522,
-    "yelp_rating": 4.0,
-    "url": "https://www.yelp.com/biz/casco-antiguo-seattle-4?adjust_creative=pxQ3XEqH9sM15FQYWsuBXQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=pxQ3XEqH9sM15FQYWsuBXQ",
-    "latitude": 47.601203,
-    "longitude": -122.333255,
-    "image_url": "https://s3-media2.fl.yelpcdn.com/bphoto/5z4fmEVq6oqvOZ0JWTd-zg/o.jpg",
-    "address": "115 Occidental Ave S, Seattle, WA 98104",
-    "distance": 770.6851931638339,
+    "review_count": 34,
+    "yelp_rating": 3.0,
+    "url": "https://www.yelp.com/biz/acapulco-bay-fort-morgan?adjust_creative=pxQ3XEqH9sM15FQYWsuBXQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=pxQ3XEqH9sM15FQYWsuBXQ",
+    "latitude": 40.2486933123126,
+    "longitude": -103.801294020832,
+    "image_url": "https://s3-media2.fl.yelpcdn.com/bphoto/zSJ73wV6dFvhxRWeYMU7hw/o.jpg",
+    "address": "200 Main St, Fort Morgan, CO 80701",
+    "distance": 32405.9929463048,
     "tacoboutit_item_review_count": 0,
     "tacos": [
         {
-            "id": 27,
+            "id": 37,
             "type": "carne asada",
-            "restaurant_id": 2361,
-            "average_rating": 5.833333333333333,
+            "restaurant_id": 46,
+            "average_rating": 10.0,
             "reviews": [
                 {
-                    "id": 2,
-                    "rating": 4.0,
-                    "review": "test review",
-                    "taco": 27
-                },
-                {
-                    "id": 3,
-                    "rating": 4.0,
-                    "review": "test review",
-                    "taco": 27
-                },
-                {
-                    "id": 4,
-                    "rating": 4.0,
-                    "review": null,
-                    "taco": 27
-                },
-                {
-                    "id": 5,
-                    "rating": 4.0,
-                    "review": null,
-                    "taco": 27
-                },
-                {
-                    "id": 6,
+                    "id": 52,
                     "rating": 10.0,
-                    "review": null,
-                    "taco": 27
-                },
-                {
-                    "id": 7,
-                    "rating": 9.0,
-                    "review": null,
-                    "taco": 27
+                    "review": "is ok",
+                    "taco": 37
                 }
             ]
-        },
-        {
-            "id": 28,
-            "type": "al pastor",
-            "restaurant_id": 2361,
-            "average_rating": null,
-            "reviews": []
         }
     ]
 }
 ```
-### GET /api/v1/restaurants
+### GET /api/v1/restaurants/retrieve
 Params: 
 ```
 Params: /api/v1/restaurants/retrieve/?lat=39.7392&lng=-104.9903
 ```
 Response:
 ```
-Body: 
 [
     {
-        "id": 2361,
-        "yelp_id": "aRur9R9tTXqRgqb_NZQyBA",
-        "name": "Casco Antiguo",
-        "phone": "+12065380400",
+        "id": 46,
+        "yelp_id": "IhQvn84o-VuCMg6oDJ-tiQ",
+        "name": "Acapulco Bay",
+        "phone": "+19705426400",
         "is_closed": false,
-        "review_count": 522,
-        "yelp_rating": 4.0,
-        "url": "https://www.yelp.com/biz/casco-antiguo-seattle-4?adjust_creative=pxQ3XEqH9sM15FQYWsuBXQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=pxQ3XEqH9sM15FQYWsuBXQ",
-        "latitude": 47.601203,
-        "longitude": -122.333255,
-        "image_url": "https://s3-media2.fl.yelpcdn.com/bphoto/5z4fmEVq6oqvOZ0JWTd-zg/o.jpg",
-        "address": "115 Occidental Ave S, Seattle, WA 98104",
-        "distance": 770.6851931638339,
+        "review_count": 34,
+        "yelp_rating": 3.0,
+        "url": "https://www.yelp.com/biz/acapulco-bay-fort-morgan?adjust_creative=pxQ3XEqH9sM15FQYWsuBXQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=pxQ3XEqH9sM15FQYWsuBXQ",
+        "latitude": 40.2486933123126,
+        "longitude": -103.801294020832,
+        "image_url": "https://s3-media2.fl.yelpcdn.com/bphoto/zSJ73wV6dFvhxRWeYMU7hw/o.jpg",
+        "address": "200 Main St, Fort Morgan, CO 80701",
+        "distance": 32405.9929463048,
         "tacoboutit_item_review_count": 0,
-        "tacos": [
-            {
-                "id": 27,
-                "type": "carne asada",
-                "restaurant": 2361
-            },
-            {
-                "id": 28,
-                "type": "al pastor",
-                "restaurant": 2361
-            }
-        ]
+        "tacos": []
     },
     {
-        "id": 2362,
-        "yelp_id": "dyN-UDqTKMk9lnv99DBbhw",
-        "name": "La Cocina Oaxaquena",
-        "phone": "+12066238226",
+        "id": 47,
+        "yelp_id": "crdZRXwGcOxegraxkHVk5g",
+        "name": "Corona's Mexican Grill-Strasburg",
+        "phone": "+13036224959",
         "is_closed": false,
-        "review_count": 464,
+        "review_count": 63,
+        "yelp_rating": 3.5,
+        "url": "https://www.yelp.com/biz/coronas-mexican-grill-strasburg-strasburg?adjust_creative=pxQ3XEqH9sM15FQYWsuBXQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=pxQ3XEqH9sM15FQYWsuBXQ",
+        "latitude": 39.7390207,
+        "longitude": -104.3296081,
+        "image_url": "https://s3-media1.fl.yelpcdn.com/bphoto/0euFFmohCDArPe1ecQ4Gwg/o.jpg",
+        "address": "56171 E Colfax Ave, Strasburg, CO 80136",
+        "distance": 40415.4182050924,
+        "tacoboutit_item_review_count": 0,
+        "tacos": []
+    },
+    {
+        "id": 48,
+        "yelp_id": "bpoxdIjDE9tMmojiS6limQ",
+        "name": "EL Jacal Mexican Grill",
+        "phone": "+19708671115",
+        "is_closed": false,
+        "review_count": 47,
+        "yelp_rating": 3.0,
+        "url": "https://www.yelp.com/biz/el-jacal-mexican-grill-fort-morgan?adjust_creative=pxQ3XEqH9sM15FQYWsuBXQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=pxQ3XEqH9sM15FQYWsuBXQ",
+        "latitude": 40.25836,
+        "longitude": -103.80184,
+        "image_url": "https://s3-media1.fl.yelpcdn.com/bphoto/GCMb3BMwc1if4e2X8FZ_OA/o.jpg",
+        "address": "903 Main St, Fort Morgan, CO 80701",
+        "distance": 33305.995870968,
+        "tacoboutit_item_review_count": 0,
+        "tacos": []
+    },
+    {
+        "id": 49,
+        "yelp_id": "KgGGiv6tpRgaL-kq1G_uLQ",
+        "name": "Rookies Saloon and Restaurant",
+        "phone": "+13036229750",
+        "is_closed": false,
+        "review_count": 14,
         "yelp_rating": 4.0,
-        "url": "https://www.yelp.com/biz/la-cocina-oaxaquena-seattle?adjust_creative=pxQ3XEqH9sM15FQYWsuBXQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=pxQ3XEqH9sM15FQYWsuBXQ",
-        "latitude": 47.6154747009277,
-        "longitude": -122.328178405762,
-        "image_url": "https://s3-media4.fl.yelpcdn.com/bphoto/X1Nc8XnQ6aqi3SXseOLQ8Q/o.jpg",
-        "address": "1216 Pine St, Seattle, WA 98101",
-        "distance": 974.2464664280571,
+        "url": "https://www.yelp.com/biz/rookies-saloon-and-restaurant-strasburg?adjust_creative=pxQ3XEqH9sM15FQYWsuBXQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=pxQ3XEqH9sM15FQYWsuBXQ",
+        "latitude": 39.735577,
+        "longitude": -104.321918,
+        "image_url": "https://s3-media2.fl.yelpcdn.com/bphoto/2lcE2INCYZVZYPeqFJWvng/o.jpg",
+        "address": "1323 Monroe St, Strasburg, CO 80136",
+        "distance": 40240.8151816399,
+        "tacoboutit_item_review_count": 0,
+        "tacos": []
+    },
+    {
+        "id": 50,
+        "yelp_id": "neXr7HI4v1dtEqKcazK7HQ",
+        "name": "Santiago's Mexican Restaurant",
+        "phone": "+19708672214",
+        "is_closed": false,
+        "review_count": 16,
+        "yelp_rating": 3.5,
+        "url": "https://www.yelp.com/biz/santiagos-mexican-restaurant-fort-morgan?adjust_creative=pxQ3XEqH9sM15FQYWsuBXQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=pxQ3XEqH9sM15FQYWsuBXQ",
+        "latitude": 40.25438,
+        "longitude": -103.81319,
+        "image_url": "https://s3-media1.fl.yelpcdn.com/bphoto/E9e4TzQ28t9qouAunIejHQ/o.jpg",
+        "address": "901 W Platte Ave, Fort Morgan, CO 80701",
+        "distance": 32429.6568269428,
         "tacoboutit_item_review_count": 0,
         "tacos": []
     }
@@ -209,12 +226,15 @@ Body:
 ### POST /api/v1/reviews
 When I make the POST request with this information in the body:
 ```
-{"rating": 10, "review": "is ok", "taco": 27}
+{
+    "rating": 10, 
+    "review": "is ok", 
+    "taco": 27
+}
 
 ```
 Response:
 ```
-body:
 {
     "id": 8,
     "rating": 10.0,
@@ -229,7 +249,7 @@ The post request should be formatted as follows:
 Body:
     { 
       "type": "carne asada", 
-       "restaurant": 23535
+       "restaurant": 46
      }
 ```
 Response:
@@ -252,34 +272,47 @@ Response:
     "error": "carne asada already exists"
 ```
 
-
-## Schema Design
-
-<img width="1183" alt="Screen Shot 2020-01-07 at 11 02 11 PM" src="https://user-images.githubusercontent.com/33855435/71954283-0796ae80-31a2-11ea-974c-902dc9de5da6.png">
-
-
 ### For Developers:
+## Setup instructions
+1. Clone this repo
+Install python: https://realpython.com/installing-python/
+In terminal:
+```
+pip install django
+```
+```
+pip install djangorestframework
+```
+```
+pip install psycopg2
+```
+```
+pip install requests
+```
+```
+pip install requests
+```
 
-### Product Management
-Github Projects
-
+2. Create a virtual environment(venv) on your local environment
 
 ### Testing
-Pytest
-Py-cov
-psycopg2 
-django rest_frameowork
-dot-env
-
-In terminal run:
+install testing packs: 
+```
+pip install pytest
+```
+```
+pip install pytest-django
+```
+```
+pip install pytest-cov
+```
+```
+pip install mixer
+```
+to run tests: 
 ```
 py.test
 ```
-
-### Versions
-Python3
-Django
-
 
 ### Core Contributors
 Alec Wells Github: alect47
