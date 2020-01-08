@@ -80,7 +80,6 @@ class RestaurantTestCase(APITestCase):
         }
         content = json.loads(response.content)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # print(content[0]['id'])
         self.assertEqual(content[0]['yelp_id'], data['yelp_id'])
         self.assertEqual(content[0]['name'], data['name'])
         self.assertEqual(content[0]['phone'], data['phone'])
