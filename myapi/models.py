@@ -17,28 +17,17 @@ class Restaurant(models.Model):
     image_url = models.CharField(max_length=400, null=True)
     address = models.CharField(max_length=100, null=True)
     distance = models.FloatField(max_length=100, null=True)
-    # transactions = ArrayField(models.CharField(max_length=50), blank=True)
     tacoboutit_item_review_count = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
 
-    #  Properties allow us to call self.tacos()
-    # @property
-    # def tacos(self):
-    #     return self.tacos.all()
-
 class Taco(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name="tacos")
-    type = models.CharField(max_length=50)
+    type = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.type
-
-    # @property
-    # def reviews(self):
-    #     print("testing testing")
-    #     return self.reviews.all()
 
     @property
     def average_rating(self):
