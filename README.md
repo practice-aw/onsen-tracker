@@ -7,6 +7,11 @@ given coordinates from the user. That data is then filtered in backend alorithms
 our database with a newly generated ID. Using our internal API you can make a variety of HTTP requests related to 
 specific Taco dishes. 
 
+## Getting Started
+Heroku: https://tacoboutit-test.herokuapp.com
+Postman[https://www.getpostman.com/downloads/] can be used to make HTTP requests. 
+
+
 # Endpoints
 ### GET /api/v1/reviews
 Response:
@@ -252,9 +257,6 @@ Response:
 
 <img width="1183" alt="Screen Shot 2020-01-07 at 11 02 11 PM" src="https://user-images.githubusercontent.com/33855435/71954283-0796ae80-31a2-11ea-974c-902dc9de5da6.png">
 
-## Getting Started
-Heroku: https://tacoboutit-test.herokuapp.com
-Postman[https://www.getpostman.com/downloads/] can be used to make HTTP requests. 
 
 ### For Developers: How to Run Tests
 
