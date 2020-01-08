@@ -59,6 +59,14 @@ class RestaurantTestCase(APITestCase):
         self.assertEqual(response.data['yelp_rating'], 4.7)
         self.assertEqual(response.data['tacos'][0]['id'], taco_id)
 
+    def test_get_one_restaurant_bad_id(self):
+        response = self.client.get(f'/api/v1/restaurants/123456/')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        content = json.loads(response.content)
+
+        self.assertEqual(content['detail'], 'Not found.')
+
     def test_restaurants_retrieve(self):
         response = self.client.get('/api/v1/restaurants/retrieve/', {'lat': 30, 'lng': -104})
         data ={
