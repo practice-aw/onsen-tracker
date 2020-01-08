@@ -24,7 +24,6 @@ class TacoViewSet( mixins.RetrieveModelMixin,
 
     @csrf_exempt
     def post_new(request):
-        data = request.POST
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         id = body['restaurant']
@@ -51,11 +50,15 @@ class TacoViewSet( mixins.RetrieveModelMixin,
              return JsonResponse(content, status=status.HTTP_404_NOT_FOUND)
 
 
+
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-class RestaurantViewSet(viewsets.ModelViewSet):
+class RestaurantViewSet(mixins.RetrieveModelMixin,
+                   mixins.ListModelMixin,
+                   mixins.UpdateModelMixin,
+                   viewsets.GenericViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
 
@@ -66,32 +69,38 @@ class RestaurantUpdateOrCreateViewSet(viewsets.ModelViewSet):
 
     def retrieve(request):
         params = request.GET
-        lat = params['lat']
-        lng = params['lng']
-        YELP_API_KEY = config('YELP_API_KEY')
 
-        response = requests.get(f'https://api.yelp.com/v3/businesses/search?latitude={lat}&longitude={lng}&limit=5&categories=mexican,tacos', headers={'Authorization': YELP_API_KEY})
-        business_data = response.json()
-        all_data_dicts = []
-        yelp_ids = []
-        if(business_data['total'] != 0):
-            data_org(business_data, all_data_dicts, yelp_ids)
+        if('lat' and 'lng' in params):
+            lat = params['lat']
+            lng = params['lng']
+            YELP_API_KEY = config('YELP_API_KEY')
 
-            for data in all_data_dicts:
-                print("this is where you are tru", data['yelp_id'])
-                Restaurant.objects.update_or_create(
-                    yelp_id = data['yelp_id'],
-                    defaults={'name': data['name'], 'phone': data['phone'], 'is_closed': data['is_closed'],
-                    'review_count': data['review_count'], 'yelp_rating': data['yelp_rating'], 'url': data['url'],
-                    'latitude': data['latitude'], 'longitude': data['longitude'], 'image_url': data['image_url'],
-                    'address': data['address'], 'distance': data['distance']},
-                )
-            queryset = Restaurant.objects.filter(yelp_id__in=yelp_ids)
-            serializer = RestaurantSerializer(queryset, many=True)
+            response = requests.get(f'https://api.yelp.com/v3/businesses/search?latitude={lat}&longitude={lng}&limit=5&categories=mexican,tacos', headers={'Authorization': YELP_API_KEY})
+            business_data = response.json()
+            all_data_dicts = []
+            yelp_ids = []
+            if(business_data['total'] != 0):
+                data_org(business_data, all_data_dicts, yelp_ids)
 
-            return JsonResponse(serializer.data, safe=False)
+                for data in all_data_dicts:
+                    Restaurant.objects.update_or_create(
+                        yelp_id = data['yelp_id'],
+                        defaults={'name': data['name'], 'phone': data['phone'], 'is_closed': data['is_closed'],
+                        'review_count': data['review_count'], 'yelp_rating': data['yelp_rating'], 'url': data['url'],
+                        'latitude': data['latitude'], 'longitude': data['longitude'], 'image_url': data['image_url'],
+                        'address': data['address'], 'distance': data['distance']},
+                    )
+                queryset = Restaurant.objects.filter(yelp_id__in=yelp_ids)
+                serializer = RestaurantSerializer(queryset, many=True)
+
+                return JsonResponse(serializer.data, safe=False)
+            else:
+                  content = {
+                    'status': 'Resource Not Found'
+                }
+            return JsonResponse(content, status=status.HTTP_404_NOT_FOUND)
         else:
-              content = {
-                'status': 'Resource Not Found'
-            }
-        return JsonResponse(content, status=status.HTTP_404_NOT_FOUND)
+            content = {
+              'error': 'Please Provide a latitude and longitude'
+          }
+        return JsonResponse(content, status=status.HTTP_400_BAD_REQUEST)
