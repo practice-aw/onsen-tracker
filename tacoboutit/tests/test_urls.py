@@ -5,13 +5,60 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from decouple import config
 from django.utils.html import escape
+from myapi.models import Restaurant, Taco
 
 #rest and taco show pages /:id
 #tacos/new/
 #tacos -- test to see if review data comes in response
 
 
-class ApiTestCase(APITestCase):
+class RestaurantTestCase(APITestCase):
+    def setUp(self):
+        restuarant = Restaurant.objects.create(name='scotts tacos',
+                        yelp_id = "akbkhadfb",
+                        phone = "123456789",
+                        is_closed = False,
+                        review_count = 10,
+                        yelp_rating = 4.7,
+                        url = "http.hfhsf",
+                        latitude = 47.60934,
+                        longitude = -122.34076,
+                        image_url = "https://s3-media3.fl.yelpcdn.com/bphoto/LFo_pxrIEmbVhkKSzZ0jiA/o.jpg",
+                        address = "1521 1st Ave, Seattle, WA 98101",
+                        distance = 100.7,
+                        tacoboutit_item_review_count = 0)
+        # print(restuarant.id)
+        taco = Taco.objects.create(type='al pastor test taco', restaurant_id=restuarant.id)
+
+    def test_get_all_restaurants(self):
+        taco_id = Taco.objects.get(type='al pastor test taco').id
+        response = self.client.get('/api/v1/restaurants/')
+
+        self.assertEqual(Restaurant.objects.count(), 1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['name'], 'scotts tacos')
+        self.assertEqual(response.data[0]['yelp_id'], 'akbkhadfb')
+        self.assertEqual(response.data[0]['phone'], '123456789')
+        self.assertEqual(response.data[0]['is_closed'], False)
+        self.assertEqual(response.data[0]['review_count'], 10)
+        self.assertEqual(response.data[0]['yelp_rating'], 4.7)
+        self.assertEqual(response.data[0]['tacos'][0]['id'], taco_id)
+
+    def test_get_one_restaurant(self):
+        taco_id = Taco.objects.get(type='al pastor test taco').id
+        restaurant_id = Restaurant.objects.get(name='scotts tacos').id
+        response = self.client.get(f'/api/v1/restaurants/{restaurant_id}/')
+
+        self.assertEqual(Restaurant.objects.count(), 1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], 'scotts tacos')
+        self.assertEqual(response.data['yelp_id'], 'akbkhadfb')
+        self.assertEqual(response.data['phone'], '123456789')
+        self.assertEqual(response.data['is_closed'], False)
+        self.assertEqual(response.data['review_count'], 10)
+        self.assertEqual(response.data['yelp_rating'], 4.7)
+        self.assertEqual(response.data['tacos'][0]['id'], taco_id)
+
     def test_restaurants_retrieve(self):
         response = self.client.get('/api/v1/restaurants/retrieve/', {'lat': 30, 'lng': -104})
         data ={
@@ -34,7 +81,6 @@ class ApiTestCase(APITestCase):
         content = json.loads(response.content)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # print(content[0]['id'])
-        self.assertEqual(content[0]['id'], data['id'])
         self.assertEqual(content[0]['yelp_id'], data['yelp_id'])
         self.assertEqual(content[0]['name'], data['name'])
         self.assertEqual(content[0]['phone'], data['phone'])
@@ -49,6 +95,21 @@ class ApiTestCase(APITestCase):
         self.assertEqual(content[0]['distance'], data['distance'])
         self.assertEqual(content[0]['tacoboutit_item_review_count'], data['tacoboutit_item_review_count'])
         self.assertEqual(content[0]['tacos'], data['tacos'])
+
+    def test_restaurants_retrieve_no_params(self):
+        response = self.client.get('/api/v1/restaurants/retrieve/')
+        content = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(content['error'], 'Please Provide a latitude and longitude')
+
+    def test_restaurants_retrieve_no_restaurants(self):
+        response = self.client.get('/api/v1/restaurants/retrieve/', {'lat': 1, 'lng': 4})
+        content = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(content['status'], 'Resource Not Found')
+
 
 # class RestaurantModel:
 #class ReviewModel:
