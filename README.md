@@ -8,7 +8,8 @@ our database with a newly generated ID. This restaurant data enables users to cr
 
 ## Schema Design
 
-<img width="1183" alt="Screen Shot 2020-01-07 at 11 02 11 PM" src="https://user-images.githubusercontent.com/33855435/71954283-0796ae80-31a2-11ea-974c-902dc9de5da6.png">
+![tacoboutiterd](https://user-images.githubusercontent.com/33855435/72005861-c2a76200-320b-11ea-8f7c-80125e5b7944.jpg)
+
 
 ## Data Flow Example: 
 ### Endpoint api/v1/restaurants/retrieve?lat=40&lng=-140 
