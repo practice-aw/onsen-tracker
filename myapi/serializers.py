@@ -1,10 +1,15 @@
 from rest_framework import serializers
 
-from .models import Restaurant, Taco, Review
+from .models import Restaurant, Taco, Review, User
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
+        fields = "__all__"
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
         fields = "__all__"
 
 class TacoSerializer(serializers.ModelSerializer):
@@ -13,7 +18,8 @@ class TacoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Taco
-        fields = ('id', 'type', 'restaurant_id', 'average_rating', 'reviews')
+        fields = "__all__"
+
 
 class RestaurantSerializer(serializers.HyperlinkedModelSerializer):
     tacos = TacoSerializer(many=True, read_only=True)

@@ -9,9 +9,9 @@ from decouple import config
 from rest_framework import viewsets, mixins, generics, status
 from rest_framework.response import Response
 
-from .serializers import RestaurantSerializer, TacoSerializer, ReviewSerializer
+from .serializers import RestaurantSerializer, TacoSerializer, ReviewSerializer, UserSerializer
 
-from .models import Taco, Review, Restaurant
+from .models import Taco, Review, Restaurant, User
 # Create your views here.
 
 class TacoViewSet( mixins.RetrieveModelMixin,
@@ -34,10 +34,9 @@ class TacoViewSet( mixins.RetrieveModelMixin,
                 type = body['type']
             )
             if(taco[1]):
-                content = {
-                     'success': f'{taco[0]} added to {restaurant[0]}'
-                  }
-                return JsonResponse(content, status=status.HTTP_201_CREATED)
+                serializer = TacoSerializer(taco[0])
+
+                return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 content = {
                      'error': f'{taco[0]} already exists'
@@ -54,6 +53,13 @@ class TacoViewSet( mixins.RetrieveModelMixin,
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+
+class UserViewSet( mixins.RetrieveModelMixin,
+                   mixins.CreateModelMixin,
+                   mixins.ListModelMixin,
+                   viewsets.GenericViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 class RestaurantViewSet(mixins.RetrieveModelMixin,
                    mixins.ListModelMixin,
