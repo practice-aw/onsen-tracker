@@ -16,7 +16,9 @@ our database with a newly generated ID. This restaurant data enables users to cr
 
 ## Getting Started
 Heroku: https://tacoboutit-test.herokuapp.com
+
 Postman[https://www.getpostman.com/downloads/] can be used to make HTTP requests.
+
 Front-end Repository: https://github.com/TakoBoutIt/tacoboutit-frontend
 
 
@@ -316,4 +318,5 @@ py.test
 
 ### Core Contributors
 Alec Wells Github: alect47
+
 Scott Payton Github: scottzero
