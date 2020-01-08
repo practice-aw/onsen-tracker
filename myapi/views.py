@@ -70,7 +70,6 @@ class RestaurantUpdateOrCreateViewSet(viewsets.ModelViewSet):
 
     def retrieve(request):
         params = request.GET
-        # lng = params['lng']
 
         if('lat' and 'lng' in params):
             lat = params['lat']
