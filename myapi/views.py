@@ -56,7 +56,10 @@ class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-class RestaurantViewSet(viewsets.ModelViewSet):
+class RestaurantViewSet(mixins.RetrieveModelMixin,
+                   mixins.ListModelMixin,
+                   mixins.UpdateModelMixin,
+                   viewsets.GenericViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
 
