@@ -7,10 +7,6 @@ from decouple import config
 from django.utils.html import escape
 from myapi.models import Restaurant, Taco, Review
 
-#rest and taco show pages /:id
-#tacos/new/
-#tacos -- test to see if review data comes in response
-
 
 class RestaurantTestCase(APITestCase):
     def setUp(self):
@@ -130,7 +126,6 @@ class ReviewTestCase(APITestCase):
                         address = "1521 1st Ave, Seattle, WA 98101",
                         distance = 100.7,
                         tacoboutit_item_review_count = 0)
-        # print(restuarant.id)
         taco = Taco.objects.create(type='al pastor test taco', restaurant_id=restuarant.id)
         review = Review.objects.create(rating=7, review='terrible', taco_id=taco.id)
 
