@@ -258,11 +258,29 @@ Response:
 <img width="1183" alt="Screen Shot 2020-01-07 at 11 02 11 PM" src="https://user-images.githubusercontent.com/33855435/71954283-0796ae80-31a2-11ea-974c-902dc9de5da6.png">
 
 
-### For Developers: How to Run Tests
+### For Developers:
 
 ### Product Management
+Github Projects
+
+
+### Testing
+Pytest
+Py-cov
+psycopg2 
+django rest_frameowork
+dot-env
+
+In terminal run:
+```
+py.test
+```
 
 ### Versions
+Python3
+Django
+
 
 ### Core Contributors
-
+Alec Wells Github: alect47
+Scott Payton Github: scottzero
