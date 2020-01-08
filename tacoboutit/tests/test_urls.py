@@ -1,5 +1,5 @@
 
-import json
+import json, requests
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -203,7 +203,6 @@ class TacoTestCase(APITestCase):
                         address = "1521 1st Ave, Seattle, WA 98101",
                         distance = 100.7,
                         tacoboutit_item_review_count = 0)
-        # print(restuarant.id)
         taco = Taco.objects.create(type='al pastor test taco', restaurant_id=restuarant.id)
         review = Review.objects.create(rating=7, review='terrible', taco_id=taco.id)
 
@@ -237,17 +236,14 @@ class TacoTestCase(APITestCase):
         content = json.loads(response.content)
 
         self.assertEqual(content['detail'], 'Not found.')
-    #
+
     # def test_post_taco(self):
     #     taco_id = Taco.objects.get(type='al pastor test taco').id
     #     restaurant_id = Restaurant.objects.get(name='scotts tacos').id
-    #     response = self.client.get('/api/v1/tacos/new/', {"type": "new new", "restaurant": restaurant_id})
-    #
+    #     response = self.client.post('/api/v1/tacos/new/',{'type':'cabeza', 'restaurant': restaurant_id})
     #     content = json.loads(response.content)
     #
     #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     #     self.assertEqual(content['rating'], 10)
     #     self.assertEqual(content['review'], 'is ok')
     #     self.assertEqual(content['taco'], taco_id)
-
-    
