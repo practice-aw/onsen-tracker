@@ -192,3 +192,67 @@ class ReviewTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(content['taco'][0], 'Invalid pk "12345" - object does not exist.')
+
+class TacoTestCase(APITestCase):
+    def setUp(self):
+        restuarant = Restaurant.objects.create(name='scotts tacos',
+                        yelp_id = "akbkhadfb",
+                        phone = "123456789",
+                        is_closed = False,
+                        review_count = 10,
+                        yelp_rating = 4.7,
+                        url = "http.hfhsf",
+                        latitude = 47.60934,
+                        longitude = -122.34076,
+                        image_url = "https://s3-media3.fl.yelpcdn.com/bphoto/LFo_pxrIEmbVhkKSzZ0jiA/o.jpg",
+                        address = "1521 1st Ave, Seattle, WA 98101",
+                        distance = 100.7,
+                        tacoboutit_item_review_count = 0)
+        # print(restuarant.id)
+        taco = Taco.objects.create(type='al pastor test taco', restaurant_id=restuarant.id)
+        review = Review.objects.create(rating=7, review='terrible', taco_id=taco.id)
+
+    def test_get_all_tacos(self):
+        taco_id = Taco.objects.get(type='al pastor test taco').id
+        review_id = Review.objects.get(review='terrible').id
+        response = self.client.get('/api/v1/tacos/')
+
+        self.assertEqual(Taco.objects.count(), 1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['id'], taco_id)
+        self.assertEqual(response.data[0]['type'], 'al pastor test taco')
+        self.assertEqual(response.data[0]['average_rating'], 7.0)
+        self.assertEqual(response.data[0]['reviews'][0]['id'], review_id)
+
+    def test_get_one_taco(self):
+        taco_id = Taco.objects.get(type='al pastor test taco').id
+        review_id = Review.objects.get(review='terrible').id
+        response = self.client.get(f'/api/v1/tacos/{taco_id}/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], taco_id)
+        self.assertEqual(response.data['type'], 'al pastor test taco')
+        self.assertEqual(response.data['average_rating'], 7.0)
+        self.assertEqual(response.data['reviews'][0]['id'], review_id)
+
+    def test_get_one_taco_bad_id(self):
+        response = self.client.get('/api/v1/tacos/433334/')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        content = json.loads(response.content)
+
+        self.assertEqual(content['detail'], 'Not found.')
+    #
+    # def test_post_taco(self):
+    #     taco_id = Taco.objects.get(type='al pastor test taco').id
+    #     restaurant_id = Restaurant.objects.get(name='scotts tacos').id
+    #     response = self.client.get('/api/v1/tacos/new/', {"type": "new new", "restaurant": restaurant_id})
+    #
+    #     content = json.loads(response.content)
+    #
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    #     self.assertEqual(content['rating'], 10)
+    #     self.assertEqual(content['review'], 'is ok')
+    #     self.assertEqual(content['taco'], taco_id)
+
+    
