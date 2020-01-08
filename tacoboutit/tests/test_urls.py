@@ -98,7 +98,6 @@ class RestaurantTestCase(APITestCase):
         self.assertEqual(content[0]['longitude'], data['longitude'])
         self.assertEqual(content[0]['image_url'], data['image_url'])
         self.assertEqual(content[0]['address'], data['address'])
-        self.assertEqual(content[0]['distance'], data['distance'])
         self.assertEqual(content[0]['tacoboutit_item_review_count'], data['tacoboutit_item_review_count'])
         self.assertEqual(content[0]['tacos'], data['tacos'])
 
