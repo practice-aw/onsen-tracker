@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.org/TakoBoutIt/tacoboutit-backend.svg?branch=master)](https://travis-ci.org/TakoBoutIt/tacoboutit-backend)
 # Tacoboutit Backend
 
 In this group project, we build a Restful Python DJANGO API that exposes endpoints for a React-Native
