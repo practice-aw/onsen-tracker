@@ -6,6 +6,7 @@ front end application. The backend application consumes Yelp API business data b
 given coordinates from the user. That data is then filtered using alorithms in the backend and saved into 
 our database with a newly generated ID. This restaurant data enables users to create post tacos for a specific restaurant, create reviews for specific tacos, as well as pulling and reviewing this data. 
 
+## End Result: 
 ![ezgif com-resize](https://user-images.githubusercontent.com/33855435/72092687-10859e00-32d0-11ea-874a-d316b0ffcffb.gif)
 
 
